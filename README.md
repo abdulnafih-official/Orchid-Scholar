@@ -212,12 +212,12 @@ To add test cases, update `eval/test_queries.json` with a question and the expec
 
 ### Latest result
 
-The latest run used the **supercapacitor** arXiv paper corpus and 15 hand-labeled queries:
+The latest run used the **supercapacitor** arXiv paper corpus and 30 hand-labeled queries:
 
 | Retrieval method | Hit@5 |
 |---|---:|
-| Dense-only | 12/15 (80%) |
-| Hybrid (BM25 + dense with RRF) | 14/15 (93%) |
+| Dense-only | 25/30 (83%) |
+| Hybrid (BM25 + dense with RRF) | 27/30 (90%) |
 
 Hybrid retrieval correctly answered 2 additional queries that dense-only retrieval missed.
 

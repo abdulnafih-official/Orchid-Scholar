@@ -73,5 +73,80 @@
     "query": "How much specific capacitance did the Co-CH electrode retain after 6000 cycles?",
     "type": "exact",
     "correct_chunk_ids": ["2109.13920v1_15"]
+  },
+  {
+    "query": "What capacitance and cycle-life retention did the laser-fabricated LRGO@PANI flexible micro-supercapacitor report?",
+    "type": "exact",
+    "correct_chunk_ids": ["2001.07429v1_0"]
+  },
+  {
+    "query": "What power density and cycling stability did the transparent CNT fibre aerogel supercapacitor achieve?",
+    "type": "exact",
+    "correct_chunk_ids": ["2101.12303v1_0"]
+  },
+  {
+    "query": "Under charge versus voltage limitations, which charging cycle gives more work in a heat-to-electricity supercapacitor?",
+    "type": "exact",
+    "correct_chunk_ids": ["2303.13671v1_0"]
+  },
+  {
+    "query": "What does the C/R characteristic slope measure in time-domain supercapacitor spectroscopy?",
+    "type": "exact",
+    "correct_chunk_ids": ["2401.06409v2_0"]
+  },
+  {
+    "query": "How does an external magnetic field affect the Bougainvillea-derived supercapacitor electrodes?",
+    "type": "paraphrase",
+    "correct_chunk_ids": ["2110.10722v1_8"]
+  },
+  {
+    "query": "Which dopant was identified as the most stable and conductive for improving SrCoO3 supercapacitor performance?",
+    "type": "exact",
+    "correct_chunk_ids": ["1908.10494v1_0"]
+  },
+  {
+    "query": "Why can graphene-sheet supercapacitors reach volumetric capacitances of at least 100 F/cm3?",
+    "type": "exact",
+    "correct_chunk_ids": ["1109.0978v2_0"]
+  },
+  {
+    "query": "What properties do the first- and second-order entropy-based numerical schemes preserve during supercapacitor charging?",
+    "type": "exact",
+    "correct_chunk_ids": ["2407.10050v3_0"]
+  },
+  {
+    "query": "What energy and power densities did the Ni(OH)2/graphene and RuO2/graphene asymmetric supercapacitor achieve?",
+    "type": "exact",
+    "correct_chunk_ids": ["1104.3379v1_0"]
+  },
+  {
+    "query": "What capacitances and energy densities were reported for the electric double-layer and pseudocapacitor devices based on vertically aligned carbon nanofibers and diamond?",
+    "type": "exact",
+    "correct_chunk_ids": ["1801.09763v1_0"]
+  },
+  {
+    "query": "Which vehicle type is the most promising application for supercapacitor hybrid energy storage, and why?",
+    "type": "paraphrase",
+    "correct_chunk_ids": ["2606.03732v2_0"]
+  },
+  {
+    "query": "What system is the proposed supercapacitor-bank model intended to support in power-system studies?",
+    "type": "exact",
+    "correct_chunk_ids": ["1908.00919v3_0"]
+  },
+  {
+    "query": "How did nitrogen functionalization change the areal capacitance and cycle stability of the amorphous carbon nanofoam electrode?",
+    "type": "exact",
+    "correct_chunk_ids": ["2410.23060v2_0"]
+  },
+  {
+    "query": "How can impedance parameters and Fourier series represent a supercapacitor's time-domain power and energy?",
+    "type": "paraphrase",
+    "correct_chunk_ids": ["2301.13078v1_15"]
+  },
+  {
+    "query": "What makes the proposed biodegradable supercapacitor more environmentally and biomedical-friendly than conventional devices?",
+    "type": "paraphrase",
+    "correct_chunk_ids": ["1806.05558v1_0"]
   }
 ]
