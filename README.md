@@ -25,8 +25,7 @@ Choose a topic, such as `supercapacitor`, `quantum battery`, or `graphene`. The 
 ### 2. Download and set up the project
 
 ```bash
-git clone https://github.com/abdulnafih-official/RAG-Project.git
-cd RAG-Project
+git clone https://github.com/abdulnafih-official/Orchid-Scholar.git
 make setup
 make env
 ```
