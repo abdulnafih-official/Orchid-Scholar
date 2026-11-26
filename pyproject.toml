@@ -6,6 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "orchid-scholar"
 version = "0.1.0"
 description = "A topic-configurable academic research RAG assistant"
+license = "MIT"
 requires-python = ">=3.11,<3.13"
 dependencies = [
     "arxiv>=2.1,<3",

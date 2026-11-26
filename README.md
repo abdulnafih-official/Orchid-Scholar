@@ -209,3 +209,7 @@ make eval
 The evaluation compares dense-only retrieval with hybrid retrieval using `Hit@5`.
 
 To add test cases, update `eval/test_queries.json` with a question and the expected `chunk_id` values.
+
+## License
+
+Orchid Scholar is licensed under the [MIT License](LICENSE).
