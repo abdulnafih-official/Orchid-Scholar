@@ -30,6 +30,7 @@ src/
   app.py                Streamlit application
 eval/test_queries.json  Hand-labeled retrieval queries
 chroma_db/              Persistent vector index (generated)
+Makefile                Common setup and build commands
 ```
 
 ## Setup
@@ -53,10 +54,30 @@ Add a valid API key to `.env`:
 GEMINI_API_KEY=your_gemini_api_key_here
 ```
 
+Or use the Makefile shortcuts:
+
+```bash
+make setup
+make env
+```
+
+To download papers, set up the environment, build every index, and start the
+app in one command:
+
+```bash
+make all
+```
+
 ## Run the app
 
 ```bash
 streamlit run src/app.py
+```
+
+The Makefile targets the virtual environment:
+
+```bash
+make app
 ```
 
 Open the local URL printed by Streamlit, then ask about electrode materials,
@@ -74,11 +95,19 @@ python src/build_bm25.py
 python src/build_dense.py
 ```
 
+Or rebuild every index with:
+
+```bash
+make index
+```
+
 To download additional arXiv papers:
 
 ```bash
 python src/arxiv_download.py --query "all:supercapacitor" --max 30 --out papers
 ```
+
+The same download is available through `make download`.
 
 ## Evaluate retrieval
 
