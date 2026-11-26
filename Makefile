@@ -51,7 +51,7 @@ setup:
 	fi
 
 env:
-	@if [ -f .env ]; then printf ".env already exists\n"; else cp .env.example .env; printf "Created .env - add your GEMINI_API_KEY\n"; fi
+	@if [ -f .env ]; then printf ".env already exists\n"; else cp .env.example .env; printf "Created .env - add your OPENAI_API_KEY\n"; fi
 
 metadata: setup
 	$(VENV_PYTHON) -m research_rag.ingestion.metadata

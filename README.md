@@ -1,55 +1,42 @@
 # Orchid Scholar
 
-A configurable retrieval-augmented generation (RAG) assistant for exploring
-academic research on any arXiv topic. It indexes PDFs for a selected keyword,
-combines sparse BM25 and dense vector retrieval with reciprocal rank fusion,
-and generates cited answers through an OpenAI-compatible chat completions API.
+**Orchid Scholar** is a local AI research assistant that searches academic papers on arXiv and answers questions using only the retrieved paper text.
 
-## Features
+Choose a topic, such as `supercapacitor`, `quantum battery`, or `graphene`. The app downloads matching papers, turns them into searchable text, and produces answers with citations.
 
-- Hybrid search using BM25 + dense embeddings
-- Reciprocal Rank Fusion for robust retrieval
-- Chunk-level citations in generated answers
-- Streamlit chat-style interface
-- Retrieval evaluation with `Hit@5`
-- Configurable arXiv keyword or multi-word topic
+## What it does
 
-## Project structure
+- Downloads academic PDFs from arXiv for a topic you choose
+- Searches papers by keyword and meaning
+- Combines BM25 keyword search with vector search
+- Generates an answer using an OpenAI-compatible AI model
+- Shows which paper passages support the answer
+- Provides a simple chat interface in Streamlit
 
-```text
-src/research_rag/
-  ingestion/            arXiv download, metadata, PDF extraction/chunking
-  indexing/             BM25, ChromaDB, and rank-fusion implementations
-  query.py              Retrieval and OpenAI-compatible answer generation
-  evaluate.py           Dense vs hybrid retrieval evaluation
-  app.py                Streamlit interface
-  config.py             Shared paths and model/index settings
-papers/                 Downloaded academic PDFs
-eval/                   Hand-labeled retrieval queries
-chroma_db/              Persistent vector index (generated)
-pyproject.toml          Package metadata and dependencies
-Makefile                Setup and workflow shortcuts
-```
+## Quick start
 
-## Setup
+### 1. Requirements
 
-Python 3.11 or 3.12 is required. `make setup` automatically uses Python 3.12
-or 3.11 when available and recreates `.venv` for the compatible runtime.
-It invokes virtualenv tools through Python modules, so setup and app launch
-also work when the project path contains spaces.
+- Python 3.11 or 3.12
+- Git
+- An API key for an OpenAI-compatible service
+- Internet access for downloading papers and installing dependencies
+
+### 2. Download and set up the project
 
 ```bash
 git clone https://github.com/abdulnafih-official/RAG-Project.git
 cd RAG-Project
-
-python3.12 -m venv .venv
-source .venv/bin/activate
-pip install -e .
-
-cp .env.example .env
+make setup
+make env
 ```
 
-Configure the endpoint, model, and API key in `.env`:
+`make setup` creates a virtual environment and installs the project dependencies.
+`make env` creates a `.env` configuration file.
+
+### 3. Add your API settings
+
+Open `.env` and replace `your_api_key_here` with your API key:
 
 ```dotenv
 OPENAI_BASE_URL=https://api.openai.com/v1
@@ -59,99 +46,165 @@ HF_TOKEN=your_huggingface_read_token_here
 RESEARCH_KEYWORD=supercapacitor
 ```
 
-Use values provided by your OpenAI-compatible service. `OPENAI_BASE_URL`,
-`OPENAI_MODEL_NAME`, and `OPENAI_API_KEY` are read from `.env`;
-`RESEARCH_KEYWORD` controls the arXiv search topic.
-`HF_TOKEN` is optional and lets Hugging Face model downloads authenticate to
-the Hub, which can help avoid anonymous rate limits.
+| Setting | What it does |
+|---|---|
+| `OPENAI_BASE_URL` | API endpoint of an OpenAI-compatible service |
+| `OPENAI_MODEL_NAME` | Name of the chat model used to answer questions |
+| `OPENAI_API_KEY` | Your API key |
+| `HF_TOKEN` | Optional Hugging Face token for model downloads |
+| `RESEARCH_KEYWORD` | Topic used to find arXiv papers |
 
-Or use the Makefile shortcuts:
+> Keep `.env` private. Never add your real API key to GitHub or share it publicly.
 
-```bash
-make setup
-make env
-```
+### 4. Download papers, build the indexes, and run
 
-To download papers, set up the environment, build every index, and start the
-app in one command:
+For the topic in `.env`:
 
 ```bash
 make all
 ```
 
-Choose a different research topic:
+To choose a topic on the command line:
 
 ```bash
 make all KEYWORD="quantum battery"
-make download KEYWORD="graphene" MAX_PAPERS=50
 ```
 
-The keyword is used for the arXiv search and to rank matching papers. Changing
-the keyword replaces the previous PDF corpus and rebuilds the indexes.
+When setup finishes, Streamlit prints a local address such as `http://localhost:8501`. Open that address in your browser and ask a question.
 
-## Run the app
+## Change the research topic
+
+You can change the topic in `.env`:
+
+```dotenv
+RESEARCH_KEYWORD=graphene
+```
+
+Then rebuild and run the project:
 
 ```bash
-streamlit run src/research_rag/app.py
+make all
 ```
 
-The Makefile targets the virtual environment:
+Or specify the topic for a single run:
+
+```bash
+make all KEYWORD="graphene" MAX_PAPERS=50
+```
+
+Changing the topic replaces the downloaded PDF corpus and rebuilds the search indexes.
+
+## Run after the first setup
+
+If the papers and indexes already exist, start the app without rebuilding them:
 
 ```bash
 make app
 ```
 
-Open the local URL printed by Streamlit, then ask about electrode materials,
-electrolytes, cycling stability, capacitance, energy density, or charge
-storage.
-
-## Build the indexes
-
-After `make setup` (or `pip install -e .`), run these commands from the project
-root:
+To start with a different topic that is already downloaded and indexed:
 
 ```bash
-python -m research_rag.ingestion.metadata
-python -m research_rag.ingestion.chunk
-python -m research_rag.indexing.bm25
-python -m research_rag.indexing.dense
+make app KEYWORD="quantum battery"
 ```
 
-Or rebuild every index with:
+## How retrieval works
+
+1. **Arxiv download:** Finds and downloads PDFs matching the selected topic.
+2. **Chunking:** Splits PDF text into smaller sections.
+3. **BM25 search:** Finds passages with matching keywords.
+4. **Vector search:** Uses text embeddings to find passages with similar meanings.
+5. **Reciprocal Rank Fusion:** Combines both search results.
+6. **Answer generation:** Sends the best passages to the configured chat model.
+7. **Citations:** Links the answer to the exact retrieved chunks.
+
+## Useful commands
+
+| Command | Purpose |
+|---|---|
+| `make setup` | Create `.venv` and install dependencies |
+| `make env` | Create `.env` from `.env.example` |
+| `make all` | Download papers, build indexes, and start the app |
+| `make app` | Start the Streamlit app |
+| `make download KEYWORD="topic"` | Download papers for a topic |
+| `make index` | Rebuild metadata and search indexes |
+| `make clean` | Remove generated indexes and extracted text |
+| `make query` | Ask a sample question in the terminal |
+| `make eval` | Evaluate retrieval quality |
+
+## Manual setup
+
+Use these commands if you do not want to use the Makefile:
 
 ```bash
+python3.12 -m venv .venv
+source .venv/bin/activate
+pip install -e .
+cp .env.example .env
+make download KEYWORD="supercapacitor"
 make index
+streamlit run src/research_rag/app.py
 ```
 
-To download papers for a topic directly:
+On Windows, activate the virtual environment with:
+
+```powershell
+.venv\Scripts\Activate.ps1
+```
+
+## Project structure
+
+```text
+src/research_rag/
+  ingestion/            Download, extract, and chunk arXiv PDFs
+  indexing/             BM25, ChromaDB, and result fusion
+  app.py                Streamlit interface
+  query.py              Search and answer generation
+  evaluate.py           Retrieval evaluation
+  config.py             Paths and model settings
+
+papers/                 Downloaded academic PDFs
+eval/                   Hand-labeled test questions
+chroma_db/              Generated vector index
+metadata.json           Generated paper metadata
+chunks.jsonl            Generated text chunks
+bm25_index.pkl          Generated BM25 index
+```
+
+## Troubleshooting
+
+### `make setup` says Python 3.11 or 3.12 is required
+
+Install Python 3.11 or 3.12 and try again. The Makefile automatically looks for `python3.12`, `python3.11`, or `python`.
+
+### The app cannot connect to the model
+
+Check these values in `.env`:
+
+- `OPENAI_BASE_URL` is the correct API endpoint
+- `OPENAI_MODEL_NAME` is a model available to your account
+- `OPENAI_API_KEY` contains a valid key
+
+### The app does not find enough papers
+
+Try a more common topic or increase `MAX_PAPERS`:
 
 ```bash
-python -m research_rag.ingestion.arxiv_download --keyword "quantum battery" --max 30 --out papers
+make all KEYWORD="quantum battery" MAX_PAPERS=50
 ```
 
-The same download is available through `make download`.
+### A package or model download fails
 
-## Evaluate retrieval
+Make sure internet access is available. If Hugging Face authentication is required, set `HF_TOKEN` in `.env`.
+
+## Evaluation
+
+Run:
 
 ```bash
-python -m research_rag.evaluate
+make eval
 ```
 
-The evaluation compares dense-only retrieval against hybrid retrieval using
-`Hit@5`. Update `eval/test_queries.json` with queries and known `chunk_id`
-values to add test cases.
+The evaluation compares dense-only retrieval with hybrid retrieval using `Hit@5`.
 
-## CLI usage
-
-Test the hybrid query pipeline directly:
-
-```bash
-python -m research_rag.query
-```
-
-## Data and generated files
-
-The PDF corpus is stored in `papers/`. Generated artifacts such as
-`metadata.json`, `chunks.jsonl`, `bm25_index.pkl`, and `chroma_db/` can be
-recreated with `make index`. `make clean` removes those generated artifacts
-but preserves the downloaded PDFs.
+To add test cases, update `eval/test_queries.json` with a question and the expected `chunk_id` values.
