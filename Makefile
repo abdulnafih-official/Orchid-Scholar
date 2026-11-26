@@ -45,7 +45,7 @@ setup:
 		rm -rf $(VENV); \
 		"$(PYTHON)" -m venv $(VENV); \
 	fi; \
-	if [ "$$recreate" -eq 1 ] || [ ! -f "$(SETUP_STAMP)" ] || [ requirements.txt -nt "$(SETUP_STAMP)" ] || [ pyproject.toml -nt "$(SETUP_STAMP)" ]; then \
+	if [ "$$recreate" -eq 1 ] || [ ! -f "$(SETUP_STAMP)" ] || [ pyproject.toml -nt "$(SETUP_STAMP)" ]; then \
 		$(VENV_PYTHON) -m pip install -e .; \
 		touch $(SETUP_STAMP); \
 	fi

@@ -34,6 +34,8 @@ make env
 `make setup` creates a virtual environment and installs the project dependencies.
 `make env` creates a `.env` configuration file.
 
+The project uses [pyproject.toml](pyproject.toml) as the single source for package metadata and Python dependencies.
+
 ### 3. Add your API settings
 
 Open `.env` and replace `your_api_key_here` with your API key:
