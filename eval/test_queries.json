@@ -1,77 +1,77 @@
 [
   {
-    "query": "cycling stability 10000 cycles",
-    "type": "exact",
-    "correct_chunk_ids": ["1903.08965v1_17"]
-  },
-  {
-    "query": "electrolyte ionic conductivity",
-    "type": "exact",
-    "correct_chunk_ids": ["2301.01023v1_3", "2301.01023v1_2"]
-  },
-  {
-    "query": "energy density Wh/kg",
-    "type": "exact",
-    "correct_chunk_ids": ["1311.1413v1_8", "1311.1548v1_10"]
-  },
-  {
-    "query": "specific capacitance of 98.2 F/g",
-    "type": "exact",
-    "correct_chunk_ids": ["2601.01601v1_11"]
-  },
-  {
-    "query": "capacity of 15.4 mAh/g",
-    "type": "exact",
-    "correct_chunk_ids": ["1706.07952v1_13"]
-  },
-  {
-    "query": "power allocation at 2000 W/kg",
-    "type": "exact",
-    "correct_chunk_ids": ["2005.03678v3_0"]
-  },
-  {
-    "query": "voltage window of 1.0 to 3.0 V",
-    "type": "exact",
-    "correct_chunk_ids": ["2301.03234v2_8"]
-  },
-  {
-    "query": "stability over 20000 cycles",
-    "type": "exact",
-    "correct_chunk_ids": ["2009.12034v1_10"]
-  },
-  {
-    "query": "cycling performance over 5000 cycles",
+    "query": "What capacitance and energy density did the flexible interdigitated supercapacitor achieve?",
     "type": "exact",
     "correct_chunk_ids": ["1903.02384v1_5"]
   },
   {
-    "query": "how do you tell if a supercapacitor's charge storage is truly capacitive or not",
-    "type": "paraphrase",
-    "correct_chunk_ids": ["1604.08154v1_12"]
+    "query": "How does charging timescale scale with the number of electrode stacks in the stack-electrode model?",
+    "type": "exact",
+    "correct_chunk_ids": ["2212.02214v2_2"]
   },
   {
-    "query": "why is there a trade-off between fast charging and high capacitance in nanopores",
-    "type": "paraphrase",
-    "correct_chunk_ids": ["1510.05595v2_13", "1510.05595v2_10"]
+    "query": "What are the three main mechanisms of supercapacitor self-discharge?",
+    "type": "exact",
+    "correct_chunk_ids": ["2301.03234v2_1"]
   },
   {
-    "query": "how does the choice of solvent affect ion movement through electrode pores",
+    "query": "What determines gravimetric capacitance in MOFs, and how important is pore size?",
     "type": "paraphrase",
-    "correct_chunk_ids": ["2403.01198v1_9"]
+    "correct_chunk_ids": ["2501.09287v1_11"]
   },
   {
-    "query": "how do redox-active ionic liquids compare to solid pseudocapacitive materials",
-    "type": "paraphrase",
-    "correct_chunk_ids": ["1711.11518v1_10"]
+    "query": "For potential differences below versus above 2 V, which electrolyte system has higher energy density?",
+    "type": "exact",
+    "correct_chunk_ids": ["2301.01023v1_12"]
   },
   {
-    "query": "how does electrochemical treatment increase a carbon electrode's surface area",
-    "type": "paraphrase",
-    "correct_chunk_ids": ["2008.05340v1_3"]
+    "query": "What tensile strength and stretchability were reported for the hydrogel, and did the device operate under 300% stretch?",
+    "type": "exact",
+    "correct_chunk_ids": ["2407.14354v1_7"]
   },
   {
-    "query": "what causes reduced electrical conductivity on functionalized carbon surfaces",
+    "query": "Which symmetric nanoporous electrode configuration had the fastest charging time?",
+    "type": "exact",
+    "correct_chunk_ids": ["2102.07230v2_8"]
+  },
+  {
+    "query": "Where does pseudocapacitance appear in the equivalent circuit relative to double-layer capacitance?",
     "type": "paraphrase",
-    "correct_chunk_ids": ["1704.08405v5_3"]
+    "correct_chunk_ids": ["1604.08154v1_10"]
+  },
+  {
+    "query": "What specific capacitance did vertical graphene on nickel foam show in 1 M Na2SO4 at 5 mV/s?",
+    "type": "exact",
+    "correct_chunk_ids": ["1603.08320v1_2"]
+  },
+  {
+    "query": "How does annealing affect N-doped hydrogenated amorphous carbon nanofoam, and what composition was optimized?",
+    "type": "paraphrase",
+    "correct_chunk_ids": ["2503.13264v3_16"]
+  },
+  {
+    "query": "Among OLS, SVR, DT, RF, and XGBoost, which model had the highest R2 and what was its value?",
+    "type": "exact",
+    "correct_chunk_ids": ["2208.04172v2_12"]
+  },
+  {
+    "query": "What energy-density ranges were reported for graphene supercapacitors, and what maximum power densities were reached in ionic liquid and LiPF6?",
+    "type": "exact",
+    "correct_chunk_ids": ["1311.1413v1_8"]
+  },
+  {
+    "query": "How does parasitic charge leakage affect the inverse relaxation approach's capacitance estimates?",
+    "type": "paraphrase",
+    "correct_chunk_ids": ["1908.02559v3_11"]
+  },
+  {
+    "query": "What does the zeolite-based aqueous supercapacitor study conclude about free desorption energy and charge retention?",
+    "type": "paraphrase",
+    "correct_chunk_ids": ["2006.01989v1_12"]
+  },
+  {
+    "query": "How much specific capacitance did the Co-CH electrode retain after 6000 cycles?",
+    "type": "exact",
+    "correct_chunk_ids": ["2109.13920v1_15"]
   }
 ]
