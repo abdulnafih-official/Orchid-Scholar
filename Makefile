@@ -1,4 +1,4 @@
-PYTHON ?= python
+PYTHON ?= $(shell command -v python3.12 2>/dev/null || command -v python3.11 2>/dev/null || command -v python 2>/dev/null)
 VENV := .venv
 VENV_PYTHON := $(VENV)/bin/python
 VENV_PIP := $(VENV)/bin/pip
@@ -27,6 +27,15 @@ help:
 all: setup env download index app
 
 setup:
+	@set -e; \
+	version=$$($(PYTHON) --version 2>&1 | awk '{print $$2}'); \
+	major=$$(printf '%s' "$$version" | cut -d. -f1); \
+	minor=$$(printf '%s' "$$version" | cut -d. -f2); \
+	if [ "$$major" -ne 3 ] || [ "$$minor" -lt 11 ] || [ "$$minor" -gt 12 ]; then \
+		printf "Python 3.11 or 3.12 is required; found $$version\n"; \
+		exit 1; \
+	fi; \
+	rm -rf $(VENV); \
 	$(PYTHON) -m venv $(VENV)
 	$(VENV_PIP) install --upgrade pip
 	$(VENV_PIP) install -r requirements.txt

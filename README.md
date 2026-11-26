@@ -35,7 +35,8 @@ Makefile                Common setup and build commands
 
 ## Setup
 
-Python 3.11 or 3.12 is recommended.
+Python 3.11 or 3.12 is required. `make setup` automatically uses Python 3.12
+or 3.11 when available and recreates `.venv` for the compatible runtime.
 
 ```bash
 git clone https://github.com/abdulnafih-official/RAG-Project.git
