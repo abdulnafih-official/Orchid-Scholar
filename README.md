@@ -210,6 +210,17 @@ The evaluation compares dense-only retrieval with hybrid retrieval using `Hit@5`
 
 To add test cases, update `eval/test_queries.json` with a question and the expected `chunk_id` values.
 
+### Latest result
+
+The latest run used the **supercapacitor** arXiv paper corpus and 15 hand-labeled queries:
+
+| Retrieval method | Hit@5 |
+|---|---:|
+| Dense-only | 12/15 (80%) |
+| Hybrid (BM25 + dense with RRF) | 14/15 (93%) |
+
+Hybrid retrieval correctly answered 2 additional queries that dense-only retrieval missed.
+
 ## License
 
 Orchid Scholar is licensed under the [MIT License](LICENSE).
