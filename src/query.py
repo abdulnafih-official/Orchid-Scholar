@@ -18,7 +18,7 @@ EMBED_MODEL_NAME = "BAAI/bge-small-en-v1.5"
 GEMINI_MODEL = "gemini-3.5-flash-lite"   
 
 SYSTEM_INSTRUCTION = """You are a research assistant answering questions about
-supercapacitor technology using only the provided excerpts from academic papers.
+the requested research topic using only the provided excerpts from academic papers.
 
 Rules:
 - Answer only using the provided context. If the context doesn't contain the

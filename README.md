@@ -1,9 +1,9 @@
-# Supercapacitor Research RAG
+# Topic Research RAG
 
-A retrieval-augmented generation (RAG) assistant for exploring academic
-supercapacitor research. It indexes arXiv PDFs, combines sparse BM25 and dense
-vector retrieval with reciprocal rank fusion, and generates cited answers with
-Google's Gemini API.
+A configurable retrieval-augmented generation (RAG) assistant for exploring
+academic research on any arXiv topic. It indexes PDFs for a selected keyword,
+combines sparse BM25 and dense vector retrieval with reciprocal rank fusion,
+and generates cited answers with Google's Gemini API.
 
 ## Features
 
@@ -12,7 +12,7 @@ Google's Gemini API.
 - Chunk-level citations in generated answers
 - Streamlit chat-style interface
 - Retrieval evaluation with `Hit@5`
-- 100 included supercapacitor research PDFs
+- Configurable arXiv keyword or multi-word topic
 
 ## Project structure
 
@@ -52,7 +52,11 @@ Add a valid API key to `.env`:
 
 ```dotenv
 GEMINI_API_KEY=your_gemini_api_key_here
+RESEARCH_KEYWORD=supercapacitor
 ```
+
+Set `RESEARCH_KEYWORD` to control the arXiv search topic, for example
+`RESEARCH_KEYWORD=quantum battery`.
 
 Or use the Makefile shortcuts:
 
@@ -67,6 +71,16 @@ app in one command:
 ```bash
 make all
 ```
+
+Choose a different research topic:
+
+```bash
+make all KEYWORD="quantum battery"
+make download KEYWORD="graphene" MAX_PAPERS=50
+```
+
+The keyword is used for the arXiv search and to rank matching papers. Changing
+the keyword replaces the previous PDF corpus and rebuilds the indexes.
 
 ## Run the app
 
@@ -101,10 +115,10 @@ Or rebuild every index with:
 make index
 ```
 
-To download additional arXiv papers:
+To download papers for a topic directly:
 
 ```bash
-python src/arxiv_download.py --query "all:supercapacitor" --max 30 --out papers
+python src/arxiv_download.py --keyword "quantum battery" --max 30 --out papers
 ```
 
 The same download is available through `make download`.

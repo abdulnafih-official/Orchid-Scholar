@@ -1,6 +1,7 @@
 """Phase 8 — Streamlit UI. Run from project root: streamlit run src/app.py"""
 import re
 import time
+import os
 
 import chromadb
 import streamlit as st
@@ -11,7 +12,8 @@ from build_bm25 import load_index as load_bm25
 from query import CHROMA_DIR, COLLECTION_NAME, EMBED_MODEL_NAME, retrieve
 from query import answer as generate_answer
 
-st.set_page_config(page_title="Supercapacitor Research Assistant", layout="wide")
+topic = os.getenv("TOPIC") or os.getenv("RESEARCH_KEYWORD", "Supercapacitor")
+st.set_page_config(page_title=f"{topic.title()} Research Assistant", layout="wide")
 
 
 @st.cache_resource(show_spinner="Loading indexes and models...")
@@ -23,8 +25,8 @@ def load_resources():
     return bm25, chunks, lookup, embed_model, collection, genai.Client()
 
 
-st.title("Supercapacitor Research Assistant")
-st.caption("Hybrid retrieval (BM25 + dense, fused with RRF) over arXiv supercapacitor papers")
+st.title(f"{topic.title()} Research Assistant")
+st.caption(f"Hybrid retrieval (BM25 + dense, fused with RRF) over arXiv {topic} papers")
 
 # Loaded once per server process, so query timing below excludes model loading.
 bm25, chunks, lookup, embed_model, collection, gemini = load_resources()
@@ -34,7 +36,7 @@ with st.sidebar:
 
 question = st.text_input(
     "Ask a question",
-    placeholder="e.g. What energy density values are reported for graphene-based supercapacitors?",
+    placeholder=f"e.g. What are the main findings about {topic.lower()}?",
 )
 
 if question:

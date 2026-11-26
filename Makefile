@@ -2,12 +2,15 @@ PYTHON ?= python
 VENV := .venv
 VENV_PYTHON := $(VENV)/bin/python
 VENV_PIP := $(VENV)/bin/pip
+MAX_PAPERS ?= 30
+ENV_KEYWORD := $(shell sed -n 's/^RESEARCH_KEYWORD=//p' .env 2>/dev/null)
+KEYWORD ?= $(if $(strip $(ENV_KEYWORD)),$(ENV_KEYWORD),supercapacitor)
 
 .PHONY: help all setup env index metadata chunks bm25 dense app query eval download clean
 
 help:
 	@printf "Available targets:\n"
-	@printf "  make all         Download, set up, build indexes, and start the app\n"
+	@printf "  make all KEYWORD=\"quantum battery\"  Download, set up, build indexes, and start the app\n"
 	@printf "  make setup       Create .venv and install dependencies\n"
 	@printf "  make env         Create .env from .env.example\n"
 	@printf "  make metadata    Fetch paper metadata\n"
@@ -18,7 +21,7 @@ help:
 	@printf "  make app         Start the Streamlit application\n"
 	@printf "  make query       Run sample CLI queries\n"
 	@printf "  make eval        Evaluate dense and hybrid retrieval\n"
-	@printf "  make download    Download 30 arXiv papers into papers/\n"
+	@printf "  make download KEYWORD=\"quantum battery\"  Download 30 matching arXiv papers\n"
 	@printf "  make clean       Remove generated indexes and extracted data\n"
 
 all: setup env download index app
@@ -43,7 +46,7 @@ bm25:
 dense:
 	$(VENV_PYTHON) src/build_dense.py
 
-index: metadata chunks bm25 dense
+index: clean metadata chunks bm25 dense
 
 app:
 	$(VENV)/bin/streamlit run src/app.py
@@ -55,7 +58,7 @@ eval:
 	$(VENV_PYTHON) src/evaluate.py
 
 download:
-	$(VENV_PYTHON) src/arxiv_download.py --query "all:supercapacitor" --max 30 --out papers
+	$(VENV_PYTHON) src/arxiv_download.py --keyword "$(KEYWORD)" --max $(MAX_PAPERS) --out papers
 
 clean:
 	rm -rf chroma_db
