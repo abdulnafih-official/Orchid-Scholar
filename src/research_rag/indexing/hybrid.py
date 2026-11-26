@@ -3,11 +3,10 @@ Fusion (RRF), so a chunk ranking well under either method gets pulled up."""
 import chromadb
 from sentence_transformers import SentenceTransformer
 
-from build_bm25 import load_index as load_bm25, tokenize
+from research_rag.config import CHROMA_DIR, COLLECTION_NAME, EMBED_MODEL_NAME
+from research_rag.indexing.bm25 import load_index as load_bm25, tokenize
 
-CHROMA_DIR = "chroma_db"
-COLLECTION_NAME = "supercap_chunks"
-MODEL_NAME = "BAAI/bge-small-en-v1.5"
+MODEL_NAME = EMBED_MODEL_NAME
 RRF_K = 60  # standard RRF constant
 
 
@@ -48,7 +47,7 @@ if __name__ == "__main__":
     chunk_lookup = {c["chunk_id"]: c for c in chunks}
 
     model = SentenceTransformer(MODEL_NAME)
-    client = chromadb.PersistentClient(path=CHROMA_DIR)
+    client = chromadb.PersistentClient(path=str(CHROMA_DIR))
     collection = client.get_collection(COLLECTION_NAME)
 
     test_queries = [

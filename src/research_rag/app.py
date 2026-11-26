@@ -1,17 +1,25 @@
-"""Phase 8 — Streamlit UI. Run from project root: streamlit run src/app.py"""
+"""Streamlit interface for the research assistant."""
+import os
 import re
 import time
-import os
 
 import chromadb
 import streamlit as st
 from google import genai
 from sentence_transformers import SentenceTransformer
+from dotenv import load_dotenv
 
-from build_bm25 import load_index as load_bm25
-from query import CHROMA_DIR, COLLECTION_NAME, EMBED_MODEL_NAME, retrieve
-from query import answer as generate_answer
+from research_rag.config import (
+    CHROMA_DIR,
+    COLLECTION_NAME,
+    EMBED_MODEL_NAME,
+    PROJECT_ROOT,
+)
+from research_rag.indexing.bm25 import load_index as load_bm25
+from research_rag.query import answer as generate_answer
+from research_rag.query import retrieve
 
+load_dotenv(PROJECT_ROOT / ".env")
 topic = os.getenv("TOPIC") or os.getenv("RESEARCH_KEYWORD", "Supercapacitor")
 st.set_page_config(page_title=f"{topic.title()} Research Assistant", layout="wide")
 
@@ -21,7 +29,7 @@ def load_resources():
     bm25, chunks = load_bm25()
     lookup = {c["chunk_id"]: c for c in chunks}
     embed_model = SentenceTransformer(EMBED_MODEL_NAME)
-    collection = chromadb.PersistentClient(path=CHROMA_DIR).get_collection(COLLECTION_NAME)
+    collection = chromadb.PersistentClient(path=str(CHROMA_DIR)).get_collection(COLLECTION_NAME)
     return bm25, chunks, lookup, embed_model, collection, genai.Client()
 
 

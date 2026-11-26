@@ -7,8 +7,7 @@ import json
 import os
 import re
 
-PAPERS_DIR = "papers"
-META_PATH = "metadata.json"
+from research_rag.config import METADATA_PATH, PAPERS_DIR
 
 # Matches e.g. 1104.3379v1, 2301.01023v1, 2511.23005v1
 ARXIV_ID_RE = re.compile(r"(\d{4}\.\d{4,5}v\d+)")
@@ -67,7 +66,7 @@ def main():
         for m in missing:
             print(f"  {m} ({id_to_filename[m]})")
 
-    with open(META_PATH, "w") as f:
+    with open(METADATA_PATH, "w") as f:
         json.dump(metadata, f, indent=2)
 
     print(f"\nTotal papers with metadata: {len(metadata)}")

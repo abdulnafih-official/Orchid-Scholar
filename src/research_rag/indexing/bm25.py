@@ -6,8 +6,7 @@ import re
 
 from rank_bm25 import BM25Okapi
 
-CHUNKS_PATH = "chunks.jsonl"
-INDEX_PATH = "bm25_index.pkl"
+from research_rag.config import BM25_INDEX_PATH, CHUNKS_PATH
 
 TOKEN_RE = re.compile(r"[a-z0-9]+")
 
@@ -26,15 +25,15 @@ def build_index():
     tokenized_corpus = [tokenize(c["text"]) for c in chunks]
     bm25 = BM25Okapi(tokenized_corpus)
 
-    with open(INDEX_PATH, "wb") as f:
+    with open(BM25_INDEX_PATH, "wb") as f:
         pickle.dump({"bm25": bm25, "chunks": chunks}, f)
 
-    print(f"Indexed {len(chunks)} chunks -> {INDEX_PATH}")
+    print(f"Indexed {len(chunks)} chunks -> {BM25_INDEX_PATH}")
     return bm25, chunks
 
 
 def load_index():
-    with open(INDEX_PATH, "rb") as f:
+    with open(BM25_INDEX_PATH, "rb") as f:
         data = pickle.load(f)
     return data["bm25"], data["chunks"]
 

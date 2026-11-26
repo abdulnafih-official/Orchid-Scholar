@@ -6,13 +6,19 @@ import json
 import chromadb
 from sentence_transformers import SentenceTransformer
 
-from build_bm25 import load_index as load_bm25
-from build_hybrid import bm25_ranking, dense_ranking, reciprocal_rank_fusion
+from research_rag.config import (
+    CHROMA_DIR,
+    COLLECTION_NAME,
+    EMBED_MODEL_NAME,
+    EVAL_PATH,
+)
+from research_rag.indexing.bm25 import load_index as load_bm25
+from research_rag.indexing.hybrid import (
+    bm25_ranking,
+    dense_ranking,
+    reciprocal_rank_fusion,
+)
 
-EVAL_PATH = "eval/test_queries.json"
-CHROMA_DIR = "chroma_db"
-COLLECTION_NAME = "supercap_chunks"
-EMBED_MODEL_NAME = "BAAI/bge-small-en-v1.5"
 TOP_K = 5
 
 
@@ -26,7 +32,7 @@ def main():
 
     bm25, chunks = load_bm25()
     embed_model = SentenceTransformer(EMBED_MODEL_NAME)
-    client = chromadb.PersistentClient(path=CHROMA_DIR)
+    client = chromadb.PersistentClient(path=str(CHROMA_DIR))
     collection = client.get_collection(COLLECTION_NAME)
 
     dense_hits, hybrid_hits = 0, 0

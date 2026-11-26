@@ -9,3 +9,7 @@ bm25_index.pkl
 chunks.jsonl
 metadata.json
 .DS_Store
+*.egg-info/
+build/
+dist/
+.pytest_cache/

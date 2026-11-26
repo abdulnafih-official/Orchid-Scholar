@@ -5,10 +5,14 @@ import json
 import chromadb
 from sentence_transformers import SentenceTransformer
 
-CHUNKS_PATH = "chunks.jsonl"
-CHROMA_DIR = "chroma_db"
-COLLECTION_NAME = "supercap_chunks"
-MODEL_NAME = "BAAI/bge-small-en-v1.5"
+from research_rag.config import (
+    CHROMA_DIR,
+    CHUNKS_PATH,
+    COLLECTION_NAME,
+    EMBED_MODEL_NAME,
+)
+
+MODEL_NAME = EMBED_MODEL_NAME
 BATCH_SIZE = 64
 
 
@@ -21,7 +25,7 @@ def build_index():
     chunks = load_chunks()
     model = SentenceTransformer(MODEL_NAME)
 
-    client = chromadb.PersistentClient(path=CHROMA_DIR)
+    client = chromadb.PersistentClient(path=str(CHROMA_DIR))
     collection = client.get_or_create_collection(COLLECTION_NAME)
 
     ids = [c["chunk_id"] for c in chunks]

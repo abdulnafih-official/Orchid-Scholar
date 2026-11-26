@@ -5,9 +5,7 @@ import json
 import os
 import re
 
-PAPERS_DIR = "papers"
-META_PATH = "metadata.json"
-OUT_PATH = "chunks.jsonl"
+from research_rag.config import CHUNKS_PATH, METADATA_PATH
 
 MIN_WORDS = 120
 MAX_WORDS = 400
@@ -95,11 +93,11 @@ def group_into_chunks(paras):
 
 
 def main():
-    with open(META_PATH) as f:
+    with open(METADATA_PATH) as f:
         metadata = json.load(f)
 
     total_chunks = 0
-    with open(OUT_PATH, "w") as out_f:
+    with open(CHUNKS_PATH, "w") as out_f:
         for paper in metadata:
             pdf_path = paper["pdf_path"]
             if not os.path.exists(pdf_path):

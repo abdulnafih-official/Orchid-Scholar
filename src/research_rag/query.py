@@ -7,15 +7,21 @@ from dotenv import load_dotenv
 from google import genai
 from sentence_transformers import SentenceTransformer
 
-from build_bm25 import load_index as load_bm25, tokenize
-from build_hybrid import bm25_ranking, dense_ranking, reciprocal_rank_fusion
+from research_rag.config import (
+    CHROMA_DIR,
+    COLLECTION_NAME,
+    EMBED_MODEL_NAME,
+    GEMINI_MODEL,
+    PROJECT_ROOT,
+)
+from research_rag.indexing.bm25 import load_index as load_bm25
+from research_rag.indexing.hybrid import (
+    bm25_ranking,
+    dense_ranking,
+    reciprocal_rank_fusion,
+)
 
-load_dotenv()
-
-CHROMA_DIR = "chroma_db"
-COLLECTION_NAME = "supercap_chunks"
-EMBED_MODEL_NAME = "BAAI/bge-small-en-v1.5"
-GEMINI_MODEL = "gemini-3.5-flash-lite"   
+load_dotenv(PROJECT_ROOT / ".env")
 
 SYSTEM_INSTRUCTION = """You are a research assistant answering questions about
 the requested research topic using only the provided excerpts from academic papers.
@@ -60,15 +66,16 @@ if __name__ == "__main__":
     chunk_lookup = {c["chunk_id"]: c for c in chunks}
 
     embed_model = SentenceTransformer(EMBED_MODEL_NAME)
-    chroma_client = chromadb.PersistentClient(path=CHROMA_DIR)
+    chroma_client = chromadb.PersistentClient(path=str(CHROMA_DIR))
     collection = chroma_client.get_collection(COLLECTION_NAME)
 
     gemini_client = genai.Client()  # reads GEMINI_API_KEY from env
+    topic = os.getenv("RESEARCH_KEYWORD", "the research topic")
 
     test_queries = [
-        "What materials show good cycling stability over 10000 cycles?",
-        "How does electrolyte ionic conductivity affect supercapacitor performance?",
-        "What energy density values are reported for graphene-based supercapacitors?",
+        f"What are the main findings about {topic}?",
+        f"Which materials or methods are compared in studies of {topic}?",
+        f"What limitations or open questions are reported about {topic}?",
     ]
 
     for q in test_queries:

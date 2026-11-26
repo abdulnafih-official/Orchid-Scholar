@@ -12,6 +12,8 @@ import requests
 
 import arxiv
 
+from research_rag.config import PAPERS_DIR
+
 
 def slug(s: str, n: int = 60) -> str:
     return re.sub(r"[^a-z0-9]+", "_", s.lower()).strip("_")[:n]
@@ -43,7 +45,7 @@ def main():
                    help="single keyword or topic used to search and rank arXiv papers")
     p.add_argument("-q", "--query", help="optional custom arXiv query syntax")
     p.add_argument("-n", "--max", type=int, default=20, help="number of papers")
-    p.add_argument("-o", "--out", default="papers")
+    p.add_argument("-o", "--out", default=str(PAPERS_DIR))
     a = p.parse_args()
 
     keyword = a.keyword.strip()
