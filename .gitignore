@@ -1,5 +1,6 @@
 papers/
 .env
+.venv/
 chroma_db/
 ragvenv/
 __pycache__/
@@ -7,3 +8,4 @@ __pycache__/
 bm25_index.pkl
 chunks.jsonl
 metadata.json
+.DS_Store
