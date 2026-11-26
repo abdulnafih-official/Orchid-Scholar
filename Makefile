@@ -3,7 +3,7 @@ VENV := .venv
 VENV_PYTHON := $(VENV)/bin/python
 SETUP_STAMP := $(VENV)/.install-stamp
 MAX_PAPERS ?= 30
-ENV_KEYWORD := $(shell sed -n 's/^RESEARCH_KEYWORD=//p' .env 2>/dev/null)
+ENV_KEYWORD := $(shell sed -n 's/^RESEARCH_KEYWORD=//p' .env 2>/dev/null | sed -e 's/^"//' -e 's/"$$//' -e "s/^'//" -e "s/'$$//")
 KEYWORD ?= $(if $(strip $(ENV_KEYWORD)),$(ENV_KEYWORD),supercapacitor)
 
 .PHONY: help all setup env index metadata chunks bm25 dense app query eval download clean
@@ -25,9 +25,9 @@ help:
 	@printf "  make clean       Remove generated indexes and extracted data\n"
 
 all: setup env
-	$(MAKE) download
+	$(MAKE) download KEYWORD="$(KEYWORD)"
 	$(MAKE) index
-	$(MAKE) app
+	$(MAKE) app KEYWORD="$(KEYWORD)"
 
 setup:
 	@set -e; \
