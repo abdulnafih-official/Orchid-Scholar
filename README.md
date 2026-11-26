@@ -1,4 +1,4 @@
-# Topic Research RAG
+# Orchid Scholar
 
 A configurable retrieval-augmented generation (RAG) assistant for exploring
 academic research on any arXiv topic. It indexes PDFs for a selected keyword,

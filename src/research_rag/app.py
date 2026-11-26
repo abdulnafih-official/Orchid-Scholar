@@ -17,7 +17,7 @@ from research_rag.query import answer as generate_answer
 from research_rag.query import create_llm_client, retrieve
 
 topic = os.getenv("TOPIC") or os.getenv("RESEARCH_KEYWORD", "Supercapacitor")
-st.set_page_config(page_title=f"{topic.title()} Research Assistant", layout="wide")
+st.set_page_config(page_title=f"Orchid Scholar | {topic.title()}", layout="wide")
 
 
 @st.cache_resource(show_spinner="Loading indexes and models...")
@@ -29,7 +29,7 @@ def load_resources():
     return bm25, chunks, lookup, embed_model, collection, create_llm_client()
 
 
-st.title(f"{topic.title()} Research Assistant")
+st.title("Orchid Scholar")
 st.caption(f"Hybrid retrieval (BM25 + dense, fused with RRF) over arXiv {topic} papers")
 
 # Loaded once per server process, so query timing below excludes model loading.
