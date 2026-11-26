@@ -37,7 +37,6 @@ setup:
 	fi; \
 	rm -rf $(VENV); \
 	$(PYTHON) -m venv $(VENV)
-	$(VENV_PIP) install --upgrade pip
 	$(VENV_PIP) install -r requirements.txt
 
 env:
