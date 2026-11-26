@@ -5,21 +5,17 @@ import time
 
 import chromadb
 import streamlit as st
-from google import genai
 from sentence_transformers import SentenceTransformer
-from dotenv import load_dotenv
 
 from research_rag.config import (
     CHROMA_DIR,
     COLLECTION_NAME,
     EMBED_MODEL_NAME,
-    PROJECT_ROOT,
 )
 from research_rag.indexing.bm25 import load_index as load_bm25
 from research_rag.query import answer as generate_answer
-from research_rag.query import retrieve
+from research_rag.query import create_llm_client, retrieve
 
-load_dotenv(PROJECT_ROOT / ".env")
 topic = os.getenv("TOPIC") or os.getenv("RESEARCH_KEYWORD", "Supercapacitor")
 st.set_page_config(page_title=f"{topic.title()} Research Assistant", layout="wide")
 
@@ -30,14 +26,14 @@ def load_resources():
     lookup = {c["chunk_id"]: c for c in chunks}
     embed_model = SentenceTransformer(EMBED_MODEL_NAME)
     collection = chromadb.PersistentClient(path=str(CHROMA_DIR)).get_collection(COLLECTION_NAME)
-    return bm25, chunks, lookup, embed_model, collection, genai.Client()
+    return bm25, chunks, lookup, embed_model, collection, create_llm_client()
 
 
 st.title(f"{topic.title()} Research Assistant")
 st.caption(f"Hybrid retrieval (BM25 + dense, fused with RRF) over arXiv {topic} papers")
 
 # Loaded once per server process, so query timing below excludes model loading.
-bm25, chunks, lookup, embed_model, collection, gemini = load_resources()
+bm25, chunks, lookup, embed_model, collection, llm_client = load_resources()
 
 with st.sidebar:
     k = st.slider("Chunks to retrieve (k)", min_value=3, max_value=10, value=5)
@@ -51,7 +47,7 @@ if question:
     start = time.perf_counter()
     with st.spinner("Retrieving and generating..."):
         retrieved = retrieve(bm25, chunks, lookup, embed_model, collection, question, top_k=k)
-        answer_text = generate_answer(gemini, question, retrieved)
+        answer_text = generate_answer(llm_client, question, retrieved)
     elapsed = time.perf_counter() - start
 
     # Citations look like [chunk_id] or [id1, id2]; check each id against what was retrieved.

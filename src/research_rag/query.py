@@ -1,27 +1,17 @@
-"""Take a user query, retrieve top chunks via hybrid search, and generate a
-cited answer using the Gemini API."""
+"""Retrieve relevant paper chunks and generate cited answers via an OpenAI-compatible API."""
 import os
 
 import chromadb
-from dotenv import load_dotenv
-from google import genai
+from openai import OpenAI
 from sentence_transformers import SentenceTransformer
 
-from research_rag.config import (
-    CHROMA_DIR,
-    COLLECTION_NAME,
-    EMBED_MODEL_NAME,
-    GEMINI_MODEL,
-    PROJECT_ROOT,
-)
+from research_rag.config import CHROMA_DIR, COLLECTION_NAME, EMBED_MODEL_NAME
 from research_rag.indexing.bm25 import load_index as load_bm25
 from research_rag.indexing.hybrid import (
     bm25_ranking,
     dense_ranking,
     reciprocal_rank_fusion,
 )
-
-load_dotenv(PROJECT_ROOT / ".env")
 
 SYSTEM_INSTRUCTION = """You are a research assistant answering questions about
 the requested research topic using only the provided excerpts from academic papers.
@@ -51,14 +41,39 @@ def build_prompt(query_text, retrieved_chunks):
     return f"Context:\n{context}\n\nQuestion: {query_text}\n\nAnswer:"
 
 
+def load_llm_settings():
+    settings = {
+        "base_url": os.getenv("OPENAI_BASE_URL", "").strip(),
+        "model_name": os.getenv("OPENAI_MODEL_NAME", "").strip(),
+        "api_key": os.getenv("OPENAI_API_KEY", "").strip(),
+    }
+    missing = [key for key, value in settings.items() if not value]
+    if missing:
+        names = ", ".join(f"OPENAI_{key.upper()}" for key in missing)
+        raise RuntimeError(f"Configure the following values in .env: {names}")
+    return settings
+
+
+def create_llm_client():
+    settings = load_llm_settings()
+    return OpenAI(base_url=settings["base_url"], api_key=settings["api_key"])
+
+
 def answer(client, query_text, retrieved_chunks):
-    prompt = build_prompt(query_text, retrieved_chunks)
-    response = client.models.generate_content(
-        model=GEMINI_MODEL,
-        contents=prompt,
-        config={"system_instruction": SYSTEM_INSTRUCTION},
+    settings = load_llm_settings()
+    response = client.chat.completions.create(
+        model=settings["model_name"],
+        messages=[
+            {"role": "system", "content": SYSTEM_INSTRUCTION},
+            {"role": "user", "content": build_prompt(query_text, retrieved_chunks)},
+        ],
     )
-    return response.text
+    if not response.choices:
+        raise RuntimeError("The language-model API returned no choices.")
+    content = response.choices[0].message.content
+    if not isinstance(content, str) or not content.strip():
+        raise RuntimeError("The language-model API returned an empty answer.")
+    return content
 
 
 if __name__ == "__main__":
@@ -69,7 +84,7 @@ if __name__ == "__main__":
     chroma_client = chromadb.PersistentClient(path=str(CHROMA_DIR))
     collection = chroma_client.get_collection(COLLECTION_NAME)
 
-    gemini_client = genai.Client()  # reads GEMINI_API_KEY from env
+    llm_client = create_llm_client()
     topic = os.getenv("RESEARCH_KEYWORD", "the research topic")
 
     test_queries = [
@@ -82,5 +97,5 @@ if __name__ == "__main__":
         print(f"\n=== Query: {q!r} ===")
         retrieved = retrieve(bm25, chunks, chunk_lookup, embed_model, collection, q, top_k=5)
         print("Retrieved chunks:", [c["chunk_id"] for c in retrieved])
-        result = answer(gemini_client, q, retrieved)
+        result = answer(llm_client, q, retrieved)
         print(f"\nAnswer:\n{result}")

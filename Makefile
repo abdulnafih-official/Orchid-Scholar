@@ -73,7 +73,7 @@ index: setup
 	$(VENV_PYTHON) -m research_rag.indexing.dense
 
 app: setup
-	$(VENV_PYTHON) -m streamlit run src/research_rag/app.py
+	TOPIC="$(KEYWORD)" $(VENV_PYTHON) -m streamlit run src/research_rag/app.py
 
 query: setup
 	$(VENV_PYTHON) -m research_rag.query

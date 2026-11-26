@@ -3,7 +3,7 @@
 A configurable retrieval-augmented generation (RAG) assistant for exploring
 academic research on any arXiv topic. It indexes PDFs for a selected keyword,
 combines sparse BM25 and dense vector retrieval with reciprocal rank fusion,
-and generates cited answers with Google's Gemini API.
+and generates cited answers through an OpenAI-compatible chat completions API.
 
 ## Features
 
@@ -20,7 +20,7 @@ and generates cited answers with Google's Gemini API.
 src/research_rag/
   ingestion/            arXiv download, metadata, PDF extraction/chunking
   indexing/             BM25, ChromaDB, and rank-fusion implementations
-  query.py              Retrieval and Gemini answer generation
+  query.py              Retrieval and OpenAI-compatible answer generation
   evaluate.py           Dense vs hybrid retrieval evaluation
   app.py                Streamlit interface
   config.py             Shared paths and model/index settings
@@ -49,15 +49,21 @@ pip install -e .
 cp .env.example .env
 ```
 
-Add a valid API key to `.env`:
+Configure the endpoint, model, and API key in `.env`:
 
 ```dotenv
-GEMINI_API_KEY=your_gemini_api_key_here
+OPENAI_BASE_URL=https://api.openai.com/v1
+OPENAI_MODEL_NAME=gpt-4o-mini
+OPENAI_API_KEY=your_api_key_here
+HF_TOKEN=your_huggingface_read_token_here
 RESEARCH_KEYWORD=supercapacitor
 ```
 
-Set `RESEARCH_KEYWORD` to control the arXiv search topic, for example
-`RESEARCH_KEYWORD=quantum battery`.
+Use values provided by your OpenAI-compatible service. `OPENAI_BASE_URL`,
+`OPENAI_MODEL_NAME`, and `OPENAI_API_KEY` are read from `.env`;
+`RESEARCH_KEYWORD` controls the arXiv search topic.
+`HF_TOKEN` is optional and lets Hugging Face model downloads authenticate to
+the Hub, which can help avoid anonymous rate limits.
 
 Or use the Makefile shortcuts:
 
