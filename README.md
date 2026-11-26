@@ -37,6 +37,8 @@ Makefile                Common setup and build commands
 
 Python 3.11 or 3.12 is required. `make setup` automatically uses Python 3.12
 or 3.11 when available and recreates `.venv` for the compatible runtime.
+It invokes virtualenv tools through Python modules, so setup and app launch
+also work when the project path contains spaces.
 
 ```bash
 git clone https://github.com/abdulnafih-official/RAG-Project.git

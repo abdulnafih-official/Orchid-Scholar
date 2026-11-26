@@ -1,7 +1,6 @@
 PYTHON ?= $(shell command -v python3.12 2>/dev/null || command -v python3.11 2>/dev/null || command -v python 2>/dev/null)
 VENV := .venv
 VENV_PYTHON := $(VENV)/bin/python
-VENV_PIP := $(VENV)/bin/pip
 MAX_PAPERS ?= 30
 ENV_KEYWORD := $(shell sed -n 's/^RESEARCH_KEYWORD=//p' .env 2>/dev/null)
 KEYWORD ?= $(if $(strip $(ENV_KEYWORD)),$(ENV_KEYWORD),supercapacitor)
@@ -28,16 +27,12 @@ all: setup env download index app
 
 setup:
 	@set -e; \
-	version=$$($(PYTHON) --version 2>&1 | awk '{print $$2}'); \
-	major=$$(printf '%s' "$$version" | cut -d. -f1); \
-	minor=$$(printf '%s' "$$version" | cut -d. -f2); \
-	if [ "$$major" -ne 3 ] || [ "$$minor" -lt 11 ] || [ "$$minor" -gt 12 ]; then \
-		printf "Python 3.11 or 3.12 is required; found $$version\n"; \
-		exit 1; \
-	fi; \
+	if [ -z "$(PYTHON)" ]; then printf "Python 3.11 or 3.12 is required\n"; exit 1; fi; \
+	version=$$("$(PYTHON)" -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")'); \
+	case "$$version" in 3.11|3.12) ;; *) printf "Python 3.11 or 3.12 is required; found $$version\n"; exit 1 ;; esac; \
 	rm -rf $(VENV); \
-	$(PYTHON) -m venv $(VENV)
-	$(VENV_PIP) install -r requirements.txt
+	"$(PYTHON)" -m venv $(VENV); \
+	$(VENV_PYTHON) -m pip install -r requirements.txt
 
 env:
 	@if [ -f .env ]; then printf ".env already exists\n"; else cp .env.example .env; printf "Created .env - add your GEMINI_API_KEY\n"; fi
@@ -57,7 +52,7 @@ dense:
 index: clean metadata chunks bm25 dense
 
 app:
-	$(VENV)/bin/streamlit run src/app.py
+	$(VENV_PYTHON) -m streamlit run src/app.py
 
 query:
 	$(VENV_PYTHON) src/query.py
